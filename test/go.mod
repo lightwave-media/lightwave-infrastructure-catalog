@@ -1,4 +1,4 @@
-module github.com/gruntwork-io/terragrunt-infrastructure-modules-example
+module github.com/lightwave-media/lightwave-infrastructure-catalog/test
 
 go 1.24
 
