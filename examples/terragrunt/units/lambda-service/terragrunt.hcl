@@ -3,8 +3,8 @@ include "root" {
 }
 
 locals {
-  src_path     = "${get_terragrunt_dir()}/src"
-  package_path = "${get_terragrunt_dir()}/package.zip"
+  src_path       = "${get_terragrunt_dir()}/src"
+  package_path   = "${get_terragrunt_dir()}/package.zip"
   package_script = "${get_terragrunt_dir()}/scripts/package.sh"
 }
 
@@ -28,8 +28,8 @@ terraform {
 }
 
 inputs = {
-  name       = "lambda-service-unit-example"
-  runtime    = "nodejs22.x"
-  handler    = "index.handler"
-  zip_file   = local.package_path
+  name     = "lambda-service-unit-example"
+  runtime  = "nodejs22.x"
+  handler  = "index.handler"
+  zip_file = local.package_path
 }

@@ -19,7 +19,7 @@ terraform {
   // Once an initial handler is created, this hook will no longer do anything.
   after_hook "handler_init" {
     commands = ["apply"]
-    execute  = [
+    execute = [
       "${get_terragrunt_dir()}/scripts/handler-init.sh",
       values.name,
       values.s3_key,

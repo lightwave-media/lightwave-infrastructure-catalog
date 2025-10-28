@@ -40,9 +40,9 @@ unit "db" {
     // to use when fetching the OpenTofu/Terraform module.
     version = "main"
 
-    name              = "${local.name}-db"
-    hash_key          = "Id"
-    hash_key_type     = "S"
+    name          = "${local.name}-db"
+    hash_key      = "Id"
+    hash_key_type = "S"
   }
 }
 

@@ -46,7 +46,7 @@ inputs = {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Effect = "Allow"
+        Effect   = "Allow"
         Resource = "arn:aws:logs:*:*:*"
       },
       {
@@ -56,7 +56,7 @@ inputs = {
           "dynamodb:UpdateItem",
           "dynamodb:DeleteItem"
         ]
-        Effect = "Allow"
+        Effect   = "Allow"
         Resource = dependency.dynamodb_table.outputs.arn
       }
     ]

@@ -36,10 +36,10 @@ dependency "dynamodb_table" {
 }
 
 locals {
-  script_dir = "${get_terragrunt_dir()}/scripts"
+  script_dir     = "${get_terragrunt_dir()}/scripts"
   package_script = "${local.script_dir}/package.sh"
 
-  src_dir = "${get_terragrunt_dir()}/src"
+  src_dir  = "${get_terragrunt_dir()}/src"
   zip_file = "${get_terragrunt_dir()}/bootstrap.zip"
 }
 
