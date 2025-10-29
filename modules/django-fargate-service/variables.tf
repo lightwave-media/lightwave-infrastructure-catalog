@@ -7,6 +7,21 @@ variable "name" {
   type        = string
 }
 
+variable "vpc_id" {
+  description = "VPC ID for the service"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for ECS tasks"
+  type        = list(string)
+}
+
+variable "public_subnet_ids" {
+  description = "List of public subnet IDs for Application Load Balancer"
+  type        = list(string)
+}
+
 variable "desired_count" {
   description = "How many instances of the Django service to run"
   type        = number

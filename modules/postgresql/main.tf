@@ -1,4 +1,21 @@
 # ---------------------------------------------------------------------------------------------------------------------
+# CREATE DB SUBNET GROUP
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_db_subnet_group" "postgresql" {
+  name       = "${var.name}-subnet-group"
+  subnet_ids = var.subnet_ids
+
+  tags = merge(
+    var.tags,
+    {
+      Name        = "${var.name}-subnet-group"
+      Environment = var.environment
+    }
+  )
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE A POSTGRESQL DATABASE
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -32,6 +49,9 @@ resource "aws_db_instance" "postgresql" {
   deletion_protection       = var.deletion_protection
   skip_final_snapshot       = var.skip_final_snapshot
   final_snapshot_identifier = var.skip_final_snapshot ? null : "${var.name}-final-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+
+  # Networking
+  db_subnet_group_name = aws_db_subnet_group.postgresql.name
 
   # Security
   vpc_security_group_ids = [aws_security_group.db.id]
@@ -110,6 +130,7 @@ resource "aws_db_parameter_group" "postgresql" {
 resource "aws_security_group" "db" {
   name        = "${var.name}-db"
   description = "Security group for ${var.name} PostgreSQL database"
+  vpc_id      = var.vpc_id
 
   tags = merge(
     var.tags,

@@ -3,22 +3,13 @@
 # These data sources are used to fetch information about the AWS environment
 # ---------------------------------------------------------------------------------------------------------------------
 
-data "aws_vpc" "default" {
-  default = true
+data "aws_vpc" "selected" {
+  id = var.vpc_id
 }
 
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
-
-data "aws_subnet" "default" {
-  for_each = toset(data.aws_subnets.default.ids)
+data "aws_subnet" "public" {
+  for_each = toset(var.public_subnet_ids)
   id       = each.value
 }
 
 data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}

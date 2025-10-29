@@ -43,9 +43,9 @@ resource "aws_ecs_service" "service" {
   }
 
   network_configuration {
-    subnets          = data.aws_subnets.default.ids
+    subnets          = var.private_subnet_ids
     security_groups  = [local.service_sg_id]
-    assign_public_ip = true
+    assign_public_ip = false
   }
 
   # Enable circuit breaker for safe deployments
@@ -277,6 +277,7 @@ module "service_sg" {
   count  = var.service_sg_id == null ? 1 : 0
   source = "../sg"
   name   = "${var.name}-service"
+  vpc_id = data.aws_vpc.selected.id
 }
 
 locals {
@@ -307,7 +308,7 @@ module "allow_inbound_on_container_port" {
 
 locals {
   # An ALB can only be attached to one subnet per AZ, so filter the list of subnets to a unique one per AZ
-  subnets_per_az  = { for subnet in data.aws_subnet.default : subnet.availability_zone => subnet.id... }
+  subnets_per_az  = { for subnet in data.aws_subnet.public : subnet.availability_zone => subnet.id... }
   subnets_for_alb = [for az, subnets in local.subnets_per_az : subnets[0]]
 }
 
@@ -344,7 +345,7 @@ resource "aws_lb_target_group" "ecs" {
   name_prefix = substr(var.name, 0, 6)
   port        = var.container_port
   protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.selected.id
   target_type = "ip"
 
   health_check {
@@ -394,6 +395,7 @@ module "alb_sg" {
   count  = var.alb_sg_id == null ? 1 : 0
   source = "../sg"
   name   = "${var.name}-alb"
+  vpc_id = data.aws_vpc.selected.id
 }
 
 locals {
