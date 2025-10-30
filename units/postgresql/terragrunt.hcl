@@ -46,11 +46,15 @@ inputs = {
   parameter_group_family = try(values.parameter_group_family, "postgres15")
 
   # Django-optimized parameters
-  shared_buffers       = try(values.shared_buffers, "32768")   # 256MB for t4g.micro
+  shared_buffers       = try(values.shared_buffers, "32768") # 256MB for t4g.micro
   max_connections      = try(values.max_connections, "100")
-  work_mem             = try(values.work_mem, "4096")          # 4MB
-  maintenance_work_mem = try(values.maintenance_work_mem, "65536") # 64MB
+  work_mem             = try(values.work_mem, "4096")               # 4MB
+  maintenance_work_mem = try(values.maintenance_work_mem, "65536")  # 64MB
   effective_cache_size = try(values.effective_cache_size, "131072") # 1GB
+
+  # Networking (REQUIRED for module)
+  vpc_id     = values.vpc_id
+  subnet_ids = values.subnet_ids
 
   # Tags
   tags = try(values.tags, {})

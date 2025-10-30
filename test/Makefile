@@ -101,6 +101,44 @@ vet: ## Run go vet
 lint: fmt vet ## Run formatters and linters
 	@echo "✅ Code formatted and vetted"
 
+# Module-specific tests (no deployment, fast)
+test-modules-minimal: ## Test all modules without deployment (fast, free)
+	@echo "Testing module configurations..."
+	go test -v -timeout 10m ./modules -run "Minimal"
+
+test-ecs-module: ## Test ECS Fargate module (deploys, ~$1)
+	@echo "Testing ECS Fargate module..."
+	@echo "⚠️  This will deploy real infrastructure"
+	@read -p "Continue? [y/N] " -n 1 -r; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		go test -v -timeout 30m ./modules -run TestECSFargateServiceModule; \
+	fi
+
+test-postgresql-module: ## Test PostgreSQL RDS module (deploys, ~$2, slow)
+	@echo "Testing PostgreSQL RDS module..."
+	@echo "⚠️  This will deploy real infrastructure (takes 10-15 minutes)"
+	@read -p "Continue? [y/N] " -n 1 -r; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		go test -v -timeout 45m ./modules -run TestPostgreSQLModule; \
+	fi
+
+test-redis-module: ## Test Redis ElastiCache module (deploys, ~$1)
+	@echo "Testing Redis ElastiCache module..."
+	@echo "⚠️  This will deploy real infrastructure"
+	@read -p "Continue? [y/N] " -n 1 -r; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		go test -v -timeout 30m ./modules -run TestRedisModule; \
+	fi
+
+test-core-modules: ## Test ECS, PostgreSQL, and Redis modules (deploys, ~$4, very slow)
+	@echo "Testing core infrastructure modules..."
+	@echo "⚠️  This will deploy real infrastructure (takes 30-45 minutes total)"
+	@echo "⚠️  Estimated cost: ~$4"
+	@read -p "Continue? [y/N] " -n 1 -r; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		go test -v -timeout 60m ./modules -run "TestECSFargateServiceModule|TestPostgreSQLModule|TestRedisModule"; \
+	fi
+
 # CI/CD targets (no prompts)
 ci-test-module: ## CI: Test module (no prompts)
 	go test -v -timeout 10m ./terragrunt/units -run TestDjangoModuleMinimal
@@ -111,4 +149,19 @@ ci-test-unit: ## CI: Test unit deployment (no prompts)
 ci-test-integration: ## CI: Test integration (no prompts)
 	go test -v -timeout 30m -run TestDjangoIntegrationFull
 
-ci-test-all: ci-test-module ci-test-unit ci-test-integration ## CI: Run all tests (no prompts)
+ci-test-modules-minimal: ## CI: Test all modules without deployment (no prompts)
+	go test -v -timeout 10m ./modules -run "Minimal"
+
+ci-test-ecs-module: ## CI: Test ECS module (no prompts)
+	go test -v -timeout 30m ./modules -run TestECSFargateServiceModule
+
+ci-test-postgresql-module: ## CI: Test PostgreSQL module (no prompts)
+	go test -v -timeout 45m ./modules -run TestPostgreSQLModule
+
+ci-test-redis-module: ## CI: Test Redis module (no prompts)
+	go test -v -timeout 30m ./modules -run TestRedisModule
+
+ci-test-core-modules: ## CI: Test core modules (no prompts)
+	go test -v -timeout 60m ./modules -run "TestECSFargateServiceModule|TestPostgreSQLModule|TestRedisModule"
+
+ci-test-all: ci-test-module ci-test-unit ci-test-integration ci-test-modules-minimal ## CI: Run all tests (no prompts)

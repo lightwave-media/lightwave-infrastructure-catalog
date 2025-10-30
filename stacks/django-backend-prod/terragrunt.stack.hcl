@@ -38,6 +38,10 @@ unit "postgresql" {
     master_username = get_env("DB_MASTER_USERNAME", "postgres")
     master_password = get_env("DB_MASTER_PASSWORD")
 
+    # Networking - Deploy to database subnets in VPC
+    vpc_id     = get_env("VPC_ID")
+    subnet_ids = split(",", get_env("DB_SUBNET_IDS"))
+
     # Production settings
     environment             = local.environment
     multi_az                = true
@@ -74,7 +78,7 @@ unit "redis" {
 
     # Production settings
     environment                = local.environment
-    num_cache_clusters         = 2  # 1 primary + 1 replica
+    num_cache_clusters         = 2 # 1 primary + 1 replica
     automatic_failover_enabled = true
     multi_az_enabled           = true
 
@@ -102,7 +106,7 @@ unit "django_service" {
 
   inputs = {
     name               = "lightwave-django-${local.environment}"
-    desired_count      = 2  # Production: 2 containers for HA
+    desired_count      = 2 # Production: 2 containers for HA
     cpu                = 512
     memory             = 1024
     ecr_repository_url = get_env("ECR_REPOSITORY_URL")
@@ -158,8 +162,8 @@ unit "cloudflare_dns" {
 
   inputs = {
     zone_id     = get_env("CLOUDFLARE_ZONE_ID")
-    record_name = "api"  # Creates api.lightwave-media.ltd
-    proxied     = true   # Enable Cloudflare proxy
+    record_name = "api" # Creates api.lightwave-media.ltd
+    proxied     = true  # Enable Cloudflare proxy
 
     # SSL/TLS
     configure_ssl_settings = true
