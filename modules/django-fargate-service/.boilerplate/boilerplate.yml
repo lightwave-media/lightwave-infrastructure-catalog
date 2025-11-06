@@ -1,0 +1,43 @@
+variables:
+  - name: ServiceName
+    description: Name of the Django service (e.g., 'lightwave-api')
+    type: string
+
+  - name: ContainerPort
+    description: Port Django runs on inside container
+    type: number
+    default: 8000
+
+  - name: DjangoSettingsModule
+    description: Django settings module (e.g., 'config.settings.prod')
+    type: string
+    default: "config.settings.prod"
+
+  - name: AllowedHosts
+    description: Comma-separated allowed hosts for Django
+    type: string
+
+  - name: DesiredCount
+    description: Number of container instances to run
+    type: number
+    default: 2
+
+  - name: Cpu
+    description: "CPU units (256, 512, 1024, 2048, 4096)"
+    type: number
+    default: 512
+
+  - name: Memory
+    description: "Memory in MB (512, 1024, 2048, 4096, 8192)"
+    type: number
+    default: 1024
+
+  - name: Environment
+    description: "Environment name (e.g., 'production', 'staging', 'development')"
+    type: string
+    default: "production"
+
+  - name: HealthCheckPath
+    description: "Health check endpoint path"
+    type: string
+    default: "/health/live/"

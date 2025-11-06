@@ -7,7 +7,9 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.29.13
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.71.1
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.79.1
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gruntwork-io/terratest v0.46.11
+	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.10.0
 )
 
