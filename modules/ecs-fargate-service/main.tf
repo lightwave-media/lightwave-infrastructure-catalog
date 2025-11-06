@@ -1,4 +1,19 @@
 # ---------------------------------------------------------------------------------------------------------------------
+# DATA SOURCES
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN ECS FARGATE CLUSTER
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -86,7 +101,8 @@ module "service_sg" {
 
   source = "../sg"
 
-  name = "${var.name}-service"
+  name   = "${var.name}-service"
+  vpc_id = data.aws_vpc.default.id
 }
 
 locals {
@@ -197,7 +213,8 @@ module "alb_sg" {
 
   source = "../sg"
 
-  name = "${var.name}-alb"
+  name   = "${var.name}-alb"
+  vpc_id = data.aws_vpc.default.id
 }
 
 locals {
