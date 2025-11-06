@@ -24,6 +24,9 @@ jobs:
         with:
           tofu_version: '1.9.0'
 
+      - name: Create terraform symlink for pre-commit hooks
+        run: sudo ln -s $(which tofu) /usr/local/bin/terraform
+
       - name: Setup Terragrunt
         run: |
           wget -q https://github.com/gruntwork-io/terragrunt/releases/download/v0.82.3/terragrunt_linux_amd64
