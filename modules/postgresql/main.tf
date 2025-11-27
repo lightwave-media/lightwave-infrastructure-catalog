@@ -80,13 +80,15 @@ resource "aws_db_parameter_group" "postgresql" {
 
   # Django-optimized PostgreSQL parameters
   parameter {
-    name  = "shared_buffers"
-    value = var.shared_buffers
+    name         = "shared_buffers"
+    value        = var.shared_buffers
+    apply_method = "pending-reboot" # Static parameter requires reboot
   }
 
   parameter {
-    name  = "max_connections"
-    value = var.max_connections
+    name         = "max_connections"
+    value        = var.max_connections
+    apply_method = "pending-reboot" # Static parameter requires reboot
   }
 
   parameter {
