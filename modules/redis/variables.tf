@@ -171,3 +171,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "vpc_id" {
+  description = "VPC ID where the Redis cluster will be deployed"
+  type        = string
+}
