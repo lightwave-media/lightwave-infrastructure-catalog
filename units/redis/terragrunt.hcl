@@ -11,6 +11,7 @@ inputs = {
   name       = values.name
   node_type  = values.node_type
   subnet_ids = values.subnet_ids
+  vpc_id     = values.vpc_id
 
   # Optional inputs - Production defaults
   engine_version = try(values.engine_version, "7.1")
