@@ -3,8 +3,14 @@
 # ---------------------------------------------------------------------------------------------------------------------
 
 variable "name" {
-  description = "The name of the DB"
+  description = "The name of the DB (used for resource naming, can contain hyphens)"
   type        = string
+}
+
+variable "db_name" {
+  description = "The name of the database to create (must be alphanumeric only, no hyphens). If not provided, defaults to 'name' with hyphens removed."
+  type        = string
+  default     = null
 }
 
 variable "instance_class" {

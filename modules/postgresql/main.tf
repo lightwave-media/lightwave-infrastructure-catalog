@@ -23,7 +23,7 @@ resource "aws_db_instance" "postgresql" {
   engine         = "postgres"
   engine_version = var.engine_version
 
-  db_name  = var.name
+  db_name  = var.db_name != null ? var.db_name : replace(var.name, "-", "")
   username = var.master_username
   password = var.master_password
 
