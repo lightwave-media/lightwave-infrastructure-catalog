@@ -126,6 +126,7 @@ resource "aws_elasticache_subnet_group" "redis" {
 resource "aws_security_group" "redis" {
   name        = "${var.name}-redis"
   description = "Security group for ${var.name} Redis cluster"
+  vpc_id      = var.vpc_id
 
   tags = merge(
     var.tags,

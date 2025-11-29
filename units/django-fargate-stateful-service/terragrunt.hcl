@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/django-fargate-service"
+  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/django-fargate-service?ref=${try(values.version, "main")}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "${get_repo_root()}/modules/postgresql"
+  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/postgresql?ref=${try(values.version, "main")}"
 }
 
 inputs = {

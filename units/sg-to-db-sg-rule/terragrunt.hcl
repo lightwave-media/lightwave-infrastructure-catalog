@@ -11,28 +11,42 @@ terraform {
   //
   // Assume that a user consuming this unit will exclusively have access
   // to the directory this file is in, and nothing else in this repository.
-  source = "git::git@github.com:gruntwork-io/terragrunt-infrastructure-catalog-example.git//modules/sg-rule?ref=${values.version}"
+  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/sg-rule?ref=${try(values.version, "main")}"
 }
 
-dependency "sg" {
-  config_path = values.sg_path
+dependency "source_service" {
+  config_path = values.source_path
 
   mock_outputs = {
-    id = "sg-1234567890"
+    service_security_group_id = "sg-mock-source"
   }
 }
 
-dependency "db" {
-  config_path = values.db_path
+dependency "dest_service" {
+  config_path = values.dest_path
 
   mock_outputs = {
-    db_security_group_id = "sg-1234567890"
+    db_security_group_id      = "sg-mock-dest-db"
+    redis_security_group_id   = "sg-mock-dest-redis"
   }
 }
 
 inputs = {
-  security_group_id        = dependency.db.outputs.db_security_group_id
-  from_port                = 3306
-  to_port                  = 3306
-  source_security_group_id = dependency.sg.outputs.id
+  # Destination security group (receives the ingress rule)
+  # Use either db_security_group_id or redis_security_group_id from dest outputs
+  security_group_id = try(
+    dependency.dest_service.outputs.db_security_group_id,
+    dependency.dest_service.outputs.redis_security_group_id
+  )
+
+  # Source security group (allowed to connect)
+  source_security_group_id = dependency.source_service.outputs.service_security_group_id
+
+  # Port configuration
+  from_port = try(values.port, 5432)  # Default to PostgreSQL port, configurable
+  to_port   = try(values.port, 5432)
+  protocol  = try(values.protocol, "tcp")
+
+  # Rule type
+  type = "ingress"
 }
