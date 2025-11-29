@@ -1,0 +1,108 @@
+name: Trigger Deployment
+
+# =============================================================================
+# App Repository Trigger Workflow
+# =============================================================================
+#
+# This workflow triggers the centralized deployment pipeline.
+# It runs tests locally and then dispatches to infrastructure-live.
+#
+# Copy this file to: .github/workflows/trigger-deploy.yml
+# Update the APP_NAME and ECR/ECS values for your app.
+# =============================================================================
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - prod
+          - staging
+          - dev
+        default: 'prod'
+
+env:
+  # ========================================
+  # UPDATE THESE VALUES FOR YOUR APP
+  # ========================================
+  APP_NAME: cineos
+  ECR_REPOSITORY: 738605694078.dkr.ecr.us-east-1.amazonaws.com/cineos
+  ECS_CLUSTER: cineos-prod
+  ECS_SERVICE: cineos-prod
+  # ========================================
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv pip install -r requirements.txt --system
+        continue-on-error: true  # Don't fail if no requirements
+
+      - name: Run tests
+        run: |
+          # Run your test command here
+          # Example: make test or pytest
+          echo "Running tests..."
+          if [ -f "Makefile" ] && grep -q "^test:" Makefile; then
+            make test
+          elif [ -f "pytest.ini" ] || [ -f "pyproject.toml" ]; then
+            pytest
+          else
+            echo "No tests configured - skipping"
+          fi
+        continue-on-error: false  # Tests must pass to deploy
+
+  trigger-deploy:
+    name: Trigger Deployment
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger deployment in infrastructure-live
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.INFRASTRUCTURE_DISPATCH_TOKEN }}
+          repository: lightwave-media/lightwave-infrastructure-live
+          event-type: deploy-app
+          client-payload: |
+            {
+              "app_name": "${{ env.APP_NAME }}",
+              "git_ref": "${{ github.sha }}",
+              "environment": "${{ inputs.environment || 'prod' }}",
+              "task_type": "app_deployer",
+              "ecr_repository": "${{ env.ECR_REPOSITORY }}",
+              "ecs_cluster": "${{ env.ECS_CLUSTER }}",
+              "ecs_service": "${{ env.ECS_SERVICE }}",
+              "triggered_by": "${{ github.actor }}",
+              "commit_message": "${{ github.event.head_commit.message }}"
+            }
+
+      - name: Deployment triggered
+        run: |
+          echo "✅ Deployment triggered!"
+          echo ""
+          echo "📦 App: ${{ env.APP_NAME }}"
+          echo "🔖 Commit: ${{ github.sha }}"
+          echo "🌍 Environment: ${{ inputs.environment || 'prod' }}"
+          echo ""
+          echo "View deployment progress at:"
+          echo "https://github.com/lightwave-media/lightwave-infrastructure-live/actions"

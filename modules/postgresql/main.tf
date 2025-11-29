@@ -23,7 +23,7 @@ resource "aws_db_instance" "postgresql" {
   engine         = "postgres"
   engine_version = var.engine_version
 
-  db_name  = var.name
+  db_name  = var.db_name != null ? var.db_name : replace(var.name, "-", "")
   username = var.master_username
   password = var.master_password
 
@@ -80,13 +80,15 @@ resource "aws_db_parameter_group" "postgresql" {
 
   # Django-optimized PostgreSQL parameters
   parameter {
-    name  = "shared_buffers"
-    value = var.shared_buffers
+    name         = "shared_buffers"
+    value        = var.shared_buffers
+    apply_method = "pending-reboot" # Static parameter requires reboot
   }
 
   parameter {
-    name  = "max_connections"
-    value = var.max_connections
+    name         = "max_connections"
+    value        = var.max_connections
+    apply_method = "pending-reboot" # Static parameter requires reboot
   }
 
   parameter {
