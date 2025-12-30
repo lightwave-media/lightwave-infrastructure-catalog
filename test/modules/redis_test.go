@@ -29,12 +29,12 @@ func TestRedisModule(t *testing.T) {
 		TerraformDir:    "../../examples/tofu/redis",
 		TerraformBinary: "tofu",
 		Vars: map[string]interface{}{
-			"name":                 name,
-			"node_type":            "cache.t3.micro", // Use small instance for testing
-			"num_cache_nodes":      1,                // Single node for testing
-			"automatic_failover":   false,            // Disable for single node
-			"multi_az":             false,            // Single AZ for cost savings
-			"auth_token_enabled":   false,            // Simplify connectivity testing
+			"name":               name,
+			"node_type":          "cache.t3.micro", // Use small instance for testing
+			"num_cache_nodes":    1,                // Single node for testing
+			"automatic_failover": false,            // Disable for single node
+			"multi_az":           false,            // Single AZ for cost savings
+			"auth_token_enabled": false,            // Simplify connectivity testing
 		},
 		EnvVars: map[string]string{
 			"AWS_DEFAULT_REGION": awsRegion,

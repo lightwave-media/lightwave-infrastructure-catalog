@@ -9,9 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/rds"
-	_ "github.com/lib/pq" // PostgreSQL driver
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	_ "github.com/lib/pq" // PostgreSQL driver
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -32,13 +32,13 @@ func TestPostgreSQLModule(t *testing.T) {
 		TerraformDir:    "../../examples/tofu/postgresql",
 		TerraformBinary: "tofu",
 		Vars: map[string]interface{}{
-			"name":            name,
-			"db_name":         dbName,
-			"master_username": username,
-			"master_password": password,
-			"instance_class":  "db.t3.micro", // Use small instance for testing
-			"allocated_storage": 20,          // Minimum for testing
-			"multi_az":        false,         // Single AZ for cost savings in tests
+			"name":              name,
+			"db_name":           dbName,
+			"master_username":   username,
+			"master_password":   password,
+			"instance_class":    "db.t3.micro", // Use small instance for testing
+			"allocated_storage": 20,            // Minimum for testing
+			"multi_az":          false,         // Single AZ for cost savings in tests
 		},
 		EnvVars: map[string]string{
 			"AWS_DEFAULT_REGION": awsRegion,

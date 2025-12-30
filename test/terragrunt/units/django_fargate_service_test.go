@@ -66,8 +66,8 @@ func testLivenessEndpoint(t *testing.T, baseURL string) {
 		t,
 		healthURL,
 		&tls.Config{},
-		18,                // maxRetries
-		10*time.Second,    // timeBetweenRetries
+		18,             // maxRetries
+		10*time.Second, // timeBetweenRetries
 		func(status int, body string) bool {
 			// Validate status code
 			if status != 200 {
@@ -138,15 +138,15 @@ func TestDjangoModuleMinimal(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../../../modules/django-fargate-service",
 		Vars: map[string]interface{}{
-			"name":                   "test-django-minimal",
-			"desired_count":          1,
-			"cpu":                    256,
-			"memory":                 512,
-			"ecr_repository_url":     "123456789012.dkr.ecr.us-east-1.amazonaws.com/test",
-			"image_tag":              "latest",
-			"django_secret_key_arn":  "arn:aws:secretsmanager:us-east-1:123456789012:secret:test",
-			"django_allowed_hosts":   "*.amazonaws.com",
-			"database_url":           "postgresql://test:test@localhost:5432/test",
+			"name":                  "test-django-minimal",
+			"desired_count":         1,
+			"cpu":                   256,
+			"memory":                512,
+			"ecr_repository_url":    "123456789012.dkr.ecr.us-east-1.amazonaws.com/test",
+			"image_tag":             "latest",
+			"django_secret_key_arn": "arn:aws:secretsmanager:us-east-1:123456789012:secret:test",
+			"django_allowed_hosts":  "*.amazonaws.com",
+			"database_url":          "postgresql://test:test@localhost:5432/test",
 		},
 	}
 
