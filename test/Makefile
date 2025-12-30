@@ -140,28 +140,29 @@ test-core-modules: ## Test ECS, PostgreSQL, and Redis modules (deploys, ~$4, ver
 	fi
 
 # CI/CD targets (no prompts)
+# Note: AWS_PROFILE= clears the profile so CI uses AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY
 ci-test-module: ## CI: Test module (no prompts)
-	go test -v -timeout 10m ./terragrunt/units -run TestDjangoModuleMinimal
+	AWS_PROFILE= go test -v -timeout 10m ./terragrunt/units -run TestDjangoModuleMinimal
 
 ci-test-unit: ## CI: Test unit deployment (no prompts)
-	go test -v -timeout 30m ./terragrunt/units -run TestUnitDjangoFargateService
+	AWS_PROFILE= go test -v -timeout 30m ./terragrunt/units -run TestUnitDjangoFargateService
 
 ci-test-integration: ## CI: Test integration (no prompts)
-	go test -v -timeout 30m -run TestDjangoIntegrationFull
+	AWS_PROFILE= go test -v -timeout 30m -run TestDjangoIntegrationFull
 
 ci-test-modules-minimal: ## CI: Test all modules without deployment (no prompts)
-	go test -v -timeout 10m ./modules -run "Minimal"
+	AWS_PROFILE= go test -v -timeout 10m ./modules -run "Minimal"
 
 ci-test-ecs-module: ## CI: Test ECS module (no prompts)
-	go test -v -timeout 30m ./modules -run TestECSFargateServiceModule
+	AWS_PROFILE= go test -v -timeout 30m ./modules -run TestECSFargateServiceModule
 
 ci-test-postgresql-module: ## CI: Test PostgreSQL module (no prompts)
-	go test -v -timeout 45m ./modules -run TestPostgreSQLModule
+	AWS_PROFILE= go test -v -timeout 45m ./modules -run TestPostgreSQLModule
 
 ci-test-redis-module: ## CI: Test Redis module (no prompts)
-	go test -v -timeout 30m ./modules -run TestRedisModule
+	AWS_PROFILE= go test -v -timeout 30m ./modules -run TestRedisModule
 
 ci-test-core-modules: ## CI: Test core modules (no prompts)
-	go test -v -timeout 60m ./modules -run "TestECSFargateServiceModule|TestPostgreSQLModule|TestRedisModule"
+	AWS_PROFILE= go test -v -timeout 60m ./modules -run "TestECSFargateServiceModule|TestPostgreSQLModule|TestRedisModule"
 
 ci-test-all: ci-test-module ci-test-unit ci-test-integration ci-test-modules-minimal ## CI: Run all tests (no prompts)
