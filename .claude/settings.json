@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/joelschaeffer/dev/lightwave/.claude/hooks/validate-infrastructure.sh",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}
