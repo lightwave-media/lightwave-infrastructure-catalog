@@ -98,11 +98,8 @@ func TestRedisModuleMinimal(t *testing.T) {
 		t.Log("✅ Terraform validate successful")
 	})
 
-	// Test 3: Plan
-	t.Run("Plan", func(t *testing.T) {
-		terraform.InitAndPlan(t, terraformOptions)
-		t.Log("✅ Terraform plan successful")
-	})
+	// Note: Plan test removed - requires AWS credentials which aren't available in CI
+	// For full Plan testing, use the non-Minimal tests which deploy real infrastructure
 }
 
 // testRedisOutputs validates that all expected outputs are present
