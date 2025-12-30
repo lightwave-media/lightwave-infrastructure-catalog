@@ -26,7 +26,7 @@ on:
 env:
   AWS_REGION: us-east-1
   GO_VERSION: '1.24'
-  OPENTOFU_VERSION: '1.8.8'
+  OPENTOFU_VERSION: '1.9.0'
   TERRAGRUNT_VERSION: '0.82.3'
 
 jobs:
@@ -69,20 +69,18 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
 
-      # Disabled temporarily to unblock PR merge - formatting issues
-      # - name: Go fmt check
-      #   working-directory: test
-      #   run: |
-      #     if [ -n "$(gofmt -l .)" ]; then
-      #       echo "Go code is not formatted:"
-      #       gofmt -d .
-      #       exit 1
-      #     fi
+      - name: Go fmt check
+        working-directory: test
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "Go code is not formatted:"
+            gofmt -d .
+            exit 1
+          fi
 
-      # Disabled temporarily to unblock PR merge - missing go.sum entries
-      # - name: Go vet
-      #   working-directory: test
-      #   run: go vet ./...
+      - name: Go vet
+        working-directory: test
+        run: go vet ./...
 
   # Job 2: Module validation (fast, no deployment)
   validate-modules:
