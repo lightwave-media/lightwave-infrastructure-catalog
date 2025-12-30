@@ -71,7 +71,7 @@ variable "django_settings_module" {
 }
 
 variable "django_secret_key_arn" {
-  description = "ARN of the AWS Secrets Manager secret containing Django SECRET_KEY"
+  description = "Name or ARN of the AWS Secrets Manager secret containing Django SECRET_KEY. Accepts: secret name (/path/to/secret), partial ARN (without suffix), or full ARN. The full ARN is looked up automatically for IAM policies."
   type        = string
 }
 

@@ -1,4 +1,15 @@
 # ---------------------------------------------------------------------------------------------------------------------
+# LOOK UP SECRETS MANAGER SECRET (TO GET FULL ARN WITH SUFFIX)
+# ---------------------------------------------------------------------------------------------------------------------
+# AWS Secrets Manager ARNs have a random 6-character suffix. This data source
+# looks up the secret by name/ARN and returns the full ARN for IAM policies.
+# The `name` parameter accepts: secret name, partial ARN, or full ARN.
+
+data "aws_secretsmanager_secret" "django_secret_key" {
+  name = var.django_secret_key_arn
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE AN ECS FARGATE CLUSTER FOR DJANGO
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -205,8 +216,9 @@ resource "aws_iam_role_policy" "secrets_access" {
         Action = [
           "secretsmanager:GetSecretValue"
         ]
+        # Use data source ARN which includes the random suffix
         Resource = [
-          var.django_secret_key_arn
+          data.aws_secretsmanager_secret.django_secret_key.arn
         ]
       }
     ]
