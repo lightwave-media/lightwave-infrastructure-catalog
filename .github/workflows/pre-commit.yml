@@ -23,5 +23,10 @@ jobs:
         with:
           tofu_version: "1.9.0"
 
+      # Create terraform symlink for pre-commit hooks that expect terraform
+      - name: Create terraform symlink
+        run: |
+          sudo ln -sf $(which tofu) /usr/local/bin/terraform
+
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
