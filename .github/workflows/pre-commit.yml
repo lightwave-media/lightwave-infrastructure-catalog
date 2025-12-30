@@ -1,0 +1,32 @@
+name: Pre-commit Checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    name: Pre-commit Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: "1.9.0"
+
+      # Create terraform symlink for pre-commit hooks that expect terraform
+      - name: Create terraform symlink
+        run: |
+          sudo ln -sf $(which tofu) /usr/local/bin/terraform
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1

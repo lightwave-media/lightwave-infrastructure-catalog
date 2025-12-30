@@ -71,34 +71,37 @@ This repository contains the following components to help you get started on bui
 
 ### OpenTofu Modules
 
-- [ec2-asg-service](/modules/ec2-asg-service): An example OpenTofu module that provisions an AWS EC2 Auto Scaling Group (ASG) with an Application Load Balancer (ALB) in front of it.
-- [ecr-repository](/modules/ecr-repository): An example OpenTofu module that provisions an Amazon Elastic Container Registry (ECR) repository.
-- [ecs-fargate-service](/modules/ecs-fargate-service): An example OpenTofu module that provisions an AWS ECS Fargate service for a containerized application.
-- [iam-role](/modules/iam-role): An example OpenTofu module that provisions an AWS IAM role with configurable policies.
-- [lambda-service](/modules/lambda-service): An example OpenTofu module that provisions an AWS Lambda function and a Lambda function URL to trigger it.
-- [mysql](/modules/mysql): An example OpenTofu module that provisions a MySQL database using Relational Database Service (RDS).
-- [s3-bucket](/modules/s3-bucket): An example OpenTofu module that provisions an S3 bucket.
-- [sg](/modules/sg): An example OpenTofu module that provisions a security group.
-- [sg-rule](/modules/sg-rule): An example OpenTofu module that provisions security group rules.
-- [dynamodb-table](/modules/dynamodb-table): An example OpenTofu module that provisions a DynamoDB table.
+- [budget](/modules/budget): An OpenTofu module that provisions AWS Budgets for cost management.
+- [cloudflare-dns](/modules/cloudflare-dns): An OpenTofu module that provisions Cloudflare DNS records.
+- [django-fargate-service](/modules/django-fargate-service): An OpenTofu module that provisions a Django application on AWS ECS Fargate.
+- [ecr-repository](/modules/ecr-repository): An OpenTofu module that provisions an Amazon Elastic Container Registry (ECR) repository.
+- [ecs-fargate-service](/modules/ecs-fargate-service): An OpenTofu module that provisions an AWS ECS Fargate service for a containerized application.
+- [github-oidc-role](/modules/github-oidc-role): An OpenTofu module that provisions IAM roles for GitHub Actions OIDC authentication.
+- [iam-role](/modules/iam-role): An OpenTofu module that provisions an AWS IAM role with configurable policies.
+- [postgresql](/modules/postgresql): An OpenTofu module that provisions a PostgreSQL database using Amazon RDS.
+- [redis](/modules/redis): An OpenTofu module that provisions a Redis cluster using Amazon ElastiCache.
+- [s3-bucket](/modules/s3-bucket): An OpenTofu module that provisions an S3 bucket.
+- [sg](/modules/sg): An OpenTofu module that provisions a security group.
+- [sg-rule](/modules/sg-rule): An OpenTofu module that provisions security group rules.
+- [vpc-endpoints](/modules/vpc-endpoints): An OpenTofu module that provisions VPC endpoints for AWS services.
 
 ### Terragrunt Units
 
-- [ec2-asg-stateful-service](/units/ec2-asg-stateful-service): An example Terragrunt unit that provisions the EC2 ASG service with persistent state via integration with a MySQL database.
-- [ecr-repository](/units/ecr-repository): An example Terragrunt unit that provisions an ECR repository.
-- [ecs-fargate-stateful-service](/units/ecs-fargate-stateful-service): An example Terragrunt unit that provisions the ECS Fargate service with persistent state via integration with a MySQL database.
-- [lambda-artifact-s3-bucket](/units/lambda-artifact-s3-bucket): An example Terragrunt unit that provisions an S3 bucket for Lambda artifacts.
-- [lambda-decoupled-service](/units/lambda-decoupled-service): An example Terragrunt unit that provisions a decoupled Lambda service.
-- [lambda-iam-role-to-dynamodb](/units/lambda-iam-role-to-dynamodb): An example Terragrunt unit that provisions an IAM role for Lambda to access DynamoDB.
-- [lambda-stateful-service](/units/lambda-stateful-service): An example Terragrunt unit that provisions a stateful Lambda service with persistent state via integration with a DynamoDB table.
-- [mysql](/units/mysql): An example Terragrunt unit that provisions a MySQL database using RDS.
-- [sg](/units/sg): An example Terragrunt unit that provisions a security group.
-- [sg-to-db-sg-rule](/units/sg-to-db-sg-rule): An example Terragrunt unit that provisions a security group rule for database access.
-- [dynamodb-table](/units/dynamodb-table): An example Terragrunt unit that provisions a DynamoDB table.
+- [cloudflare-dns](/units/cloudflare-dns): A Terragrunt unit that provisions Cloudflare DNS records.
+- [django-fargate-stateful-service](/units/django-fargate-stateful-service): A Terragrunt unit that provisions a Django application on ECS Fargate with PostgreSQL and Redis integration.
+- [ecr-repository](/units/ecr-repository): A Terragrunt unit that provisions an ECR repository.
+- [ecs-fargate-stateful-service](/units/ecs-fargate-stateful-service): A Terragrunt unit that provisions an ECS Fargate service with database integration.
+- [postgresql](/units/postgresql): A Terragrunt unit that provisions a PostgreSQL database using Amazon RDS.
+- [redis](/units/redis): A Terragrunt unit that provisions a Redis cluster using Amazon ElastiCache.
+- [secret](/units/secret): A Terragrunt unit that provisions AWS Secrets Manager secrets.
+- [sg](/units/sg): A Terragrunt unit that provisions a security group.
+- [sg-to-db-sg-rule](/units/sg-to-db-sg-rule): A Terragrunt unit that provisions a security group rule for database access.
+- [vpc-endpoint-access-rule](/units/vpc-endpoint-access-rule): A Terragrunt unit that provisions security group rules for VPC endpoint access.
+- [vpc-endpoints](/units/vpc-endpoints): A Terragrunt unit that provisions VPC endpoints for AWS services.
 
 ### Terragrunt Stacks
 
-- [ec2-asg-stateful-service](/stacks/ec2-asg-stateful-service): An example Terragrunt stack that provisions an EC2 ASG service with an Application Load Balancer (ALB) in front of it, and a MySQL database for state storage. This stack is intended to be provisioned multiple times across multiple environments.
+Stacks (collections of units for full application deployments) are defined in the [infrastructure-live](https://github.com/lightwave-media/lightwave-infrastructure-live) repository, not in this catalog. This catalog provides the reusable modules and units that stacks consume.
 
 ### Examples
 
