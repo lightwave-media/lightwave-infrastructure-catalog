@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/s3-bucket?ref=${values.version}"
+  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/s3-bucket?ref=${try(values.version, "main")}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

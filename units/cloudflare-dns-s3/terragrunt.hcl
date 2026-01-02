@@ -3,7 +3,7 @@ include "root" {
 }
 
 terraform {
-  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/cloudflare-dns?ref=${values.version}"
+  source = "git::https://github.com/lightwave-media/lightwave-infrastructure-catalog.git//modules/cloudflare-dns?ref=${try(values.version, "main")}"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
