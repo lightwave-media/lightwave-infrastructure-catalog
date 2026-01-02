@@ -14,7 +14,7 @@ dependency "s3_bucket" {
   config_path = values.s3_bucket_path
 
   mock_outputs = {
-    website_endpoint = "lightwave-cdn-prod.s3-website-us-east-1.amazonaws.com"
+    website_endpoint = "example-cdn-bucket.s3-website-us-east-1.amazonaws.com"
   }
   mock_outputs_allowed_terraform_commands = ["init", "validate", "plan"]
 }
