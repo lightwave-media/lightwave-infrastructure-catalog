@@ -53,6 +53,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
 # ---------------------------------------------------------------------------------------------------------------------
 # BUCKET POLICY FOR PUBLIC READ (CDN buckets)
 # ---------------------------------------------------------------------------------------------------------------------
+# Note: Requires block_public_access = false to allow public bucket policies
 
 resource "aws_s3_bucket_policy" "public_read" {
   count  = var.enable_public_read ? 1 : 0
@@ -62,16 +63,26 @@ resource "aws_s3_bucket_policy" "public_read" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadGetObject"
+        Sid       = "PublicReadGetObjectSecure"
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
         Resource  = "${aws_s3_bucket.bucket.arn}/*"
+        Condition = {
+          Bool = {
+            "aws:SecureTransport" = "true"
+          }
+        }
       }
     ]
   })
 
-  depends_on = [aws_s3_bucket_public_access_block.public_access]
+  lifecycle {
+    precondition {
+      condition     = !var.block_public_access
+      error_message = "enable_public_read requires block_public_access = false"
+    }
+  }
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
