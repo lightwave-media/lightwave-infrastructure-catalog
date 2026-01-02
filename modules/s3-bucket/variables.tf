@@ -89,6 +89,14 @@ variable "cors_allowed_origins" {
   description = "Allowed origins for CORS requests. Use ['*'] for public CDN."
   type        = list(string)
   default     = ["*"]
+
+  validation {
+    condition = alltrue([
+      for origin in var.cors_allowed_origins :
+      origin == "*" || can(regex("^https?://", origin))
+    ])
+    error_message = "CORS origins must be '*' or valid URLs starting with 'http://' or 'https://'"
+  }
 }
 
 variable "cors_expose_headers" {

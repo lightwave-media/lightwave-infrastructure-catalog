@@ -71,8 +71,11 @@ resource "aws_s3_bucket_website_configuration" "website" {
 # Note: Requires block_public_access = false to allow public bucket policies
 #
 # IMPORTANT: S3 website endpoints only support HTTP, not HTTPS directly.
-# The SecureTransport condition ensures requests to the S3 API use HTTPS.
-# For CDN use, Cloudflare terminates HTTPS and proxies to S3 over HTTP.
+# This policy allows public read access over HTTP for website hosting.
+# For production CDN use, Cloudflare sits in front and:
+#   1. Terminates HTTPS from end users
+#   2. Proxies requests to S3 over HTTP
+#   3. Caches responses at the edge
 # Architecture: User --HTTPS--> Cloudflare --HTTP--> S3 Website Endpoint
 # ---------------------------------------------------------------------------------------------------------------------
 

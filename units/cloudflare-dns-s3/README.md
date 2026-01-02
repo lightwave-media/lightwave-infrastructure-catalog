@@ -90,7 +90,7 @@ Inherits outputs from the `cloudflare-dns` module:
 | Name | Description |
 |------|-------------|
 | record_id | The Cloudflare DNS record ID |
-| hostname | The full hostname (e.g., cdn.example.com) |
+| fqdn | The fully qualified domain name (e.g., cdn.example.com) |
 
 ## Architecture
 
