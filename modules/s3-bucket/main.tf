@@ -21,16 +21,31 @@ resource "aws_s3_bucket_versioning" "versioning" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# BLOCK PUBLIC ACCESS (disable for CDN buckets)
+# SERVER-SIDE ENCRYPTION (always enabled)
 # ---------------------------------------------------------------------------------------------------------------------
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
+  bucket = aws_s3_bucket.bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+    bucket_key_enabled = true
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# BLOCK PUBLIC ACCESS (disable for CDN buckets)
+# ---------------------------------------------------------------------------------------------------------------------
+# Always create this resource with explicit settings to avoid relying on AWS defaults
+
 resource "aws_s3_bucket_public_access_block" "public_access" {
-  count                   = var.block_public_access ? 1 : 0
   bucket                  = aws_s3_bucket.bucket.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  block_public_acls       = var.block_public_access
+  block_public_policy     = var.block_public_access
+  ignore_public_acls      = var.block_public_access
+  restrict_public_buckets = var.block_public_access
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -58,6 +73,9 @@ resource "aws_s3_bucket_website_configuration" "website" {
 resource "aws_s3_bucket_policy" "public_read" {
   count  = var.enable_public_read ? 1 : 0
   bucket = aws_s3_bucket.bucket.id
+
+  # Wait for public access block to be configured before applying policy
+  depends_on = [aws_s3_bucket_public_access_block.public_access]
 
   policy = jsonencode({
     Version = "2012-10-17"
