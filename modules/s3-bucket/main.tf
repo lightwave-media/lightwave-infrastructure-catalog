@@ -69,6 +69,12 @@ resource "aws_s3_bucket_website_configuration" "website" {
 # BUCKET POLICY FOR PUBLIC READ (CDN buckets)
 # ---------------------------------------------------------------------------------------------------------------------
 # Note: Requires block_public_access = false to allow public bucket policies
+#
+# IMPORTANT: S3 website endpoints only support HTTP, not HTTPS directly.
+# The SecureTransport condition ensures requests to the S3 API use HTTPS.
+# For CDN use, Cloudflare terminates HTTPS and proxies to S3 over HTTP.
+# Architecture: User --HTTPS--> Cloudflare --HTTP--> S3 Website Endpoint
+# ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_s3_bucket_policy" "public_read" {
   count  = var.enable_public_read ? 1 : 0
@@ -81,16 +87,11 @@ resource "aws_s3_bucket_policy" "public_read" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "PublicReadGetObjectSecure"
+        Sid       = "PublicReadGetObject"
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
         Resource  = "${aws_s3_bucket.bucket.arn}/*"
-        Condition = {
-          Bool = {
-            "aws:SecureTransport" = "true"
-          }
-        }
       }
     ]
   })

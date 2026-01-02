@@ -29,10 +29,10 @@ inputs = {
   website_error_document = try(values.website_error_document, "404.html")
 
   # CORS for cross-domain asset requests
-  # WARNING: Defaults to ["*"] (all origins) for public CDN use.
-  # Override cors_allowed_origins if you need to restrict access to specific domains.
+  # SECURITY: cors_allowed_origins is REQUIRED - no default to prevent accidental exposure
+  # Example: ["https://example.com", "https://www.example.com"]
   enable_cors          = true
-  cors_allowed_origins = try(values.cors_allowed_origins, ["*"])
+  cors_allowed_origins = values.cors_allowed_origins
   cors_allowed_methods = try(values.cors_allowed_methods, ["GET", "HEAD"])
   cors_allowed_headers = try(values.cors_allowed_headers, ["*"])
   cors_max_age_seconds = try(values.cors_max_age_seconds, 86400) # 24 hours

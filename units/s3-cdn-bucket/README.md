@@ -21,7 +21,7 @@ unit "cdn_bucket" {
     name        = "my-cdn-bucket"
     environment = "prod"
 
-    # IMPORTANT: Restrict CORS to your domains in production
+    # REQUIRED: Specify allowed origins for CORS
     cors_allowed_origins = [
       "https://example.com",
       "https://www.example.com",
@@ -47,15 +47,15 @@ This unit creates a **publicly accessible** S3 bucket. Only use for:
 
 ### CORS Configuration
 
-By default, CORS allows all origins (`["*"]`). **Always override `cors_allowed_origins`** in production to restrict access to your domains only.
+`cors_allowed_origins` is **required** - you must explicitly specify which domains can access your CDN assets. This prevents accidental exposure to all origins.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | name | The name of the S3 bucket | string | - | yes |
+| cors_allowed_origins | Allowed origins for CORS (security requirement) | list(string) | - | yes |
 | environment | Environment tag (prod, staging, dev) | string | "prod" | no |
-| cors_allowed_origins | Allowed origins for CORS | list(string) | ["*"] | no |
 | cors_allowed_methods | Allowed HTTP methods | list(string) | ["GET", "HEAD"] | no |
 | cors_allowed_headers | Allowed headers | list(string) | ["*"] | no |
 | cors_max_age_seconds | CORS preflight cache duration | number | 86400 | no |
@@ -79,18 +79,30 @@ Inherits all outputs from the `s3-bucket` module:
 
 ## Architecture
 
+**Important**: S3 website endpoints only support HTTP, not HTTPS. Cloudflare handles HTTPS termination.
+
 ```
-User Request
+User Request (HTTPS)
     │
     ▼
 Cloudflare (Edge Cache)
+    │ - SSL/TLS termination
+    │ - Edge caching (7 days default)
+    │ - Brotli compression
+    │ - DDoS protection
+    │
     │ CNAME: cdn.example.com → bucket.s3-website-region.amazonaws.com
+    │ (HTTP connection to origin)
     ▼
 S3 Bucket (Origin)
-    │
+    │ - Website hosting enabled
+    │ - Public read policy
+    │ - CORS headers
     ▼
 Static Asset
 ```
+
+This architecture ensures end-users always connect via HTTPS while S3 serves content efficiently.
 
 ## Cache Strategy
 
